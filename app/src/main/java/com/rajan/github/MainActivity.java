@@ -31,7 +31,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements CustomDialog.CustomDialogListener{
 
 
-    private  String userName="rajandu", repoName="eoto";
+    public   String userName="rajandu", repoName="EOTO";
     TextView addFileText;
     ImageView addFileImage;
     RecyclerView mRecyclerView;
@@ -46,10 +46,9 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
         addFileImage = findViewById(id.addFilePanaImage);
         addFileText = findViewById(id.addFileText);
 
-        addFileImage.setVisibility(View.GONE);
         addFileText.setVisibility(View.GONE);
+        addFileImage.setVisibility(View.GONE);
 
-        //addFileText.setText(userName+" "+repoName);
 
         mRecyclerView =  findViewById(id.repoRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
         RepoEndPoint apiService =
                 APIClient.getClient().create(RepoEndPoint.class);
 
-        Call<List<RepoModel>> call = apiService.getRepo(userName);
+        Call<List<RepoModel>> call = apiService.getRepo(userName,repoName);
         call.enqueue(new Callback<List<RepoModel>>() {
             @Override
             public void onResponse(Call<List<RepoModel>> call, Response<List<RepoModel>> response) {
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
                 repoModels.clear();
                 repoModels.addAll(response.body());
                 myAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -85,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
 
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu,menu);

@@ -10,7 +10,7 @@ public class RepoModel {
     @SerializedName("description")
     private String description;
 
-    @SerializedName("repoURL")
+    @SerializedName("html_url")
     private String repoURL;
 
 
@@ -37,7 +37,11 @@ public class RepoModel {
     public String getRepoURL(){return repoURL;}
 
     public String getDescription() {
-        return description;
+        if(description==null){
+            return "This repo has no discription";
+        }else{
+            return description;
+        }
     }
 
     public void setDescription(String description) {
