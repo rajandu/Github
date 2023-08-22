@@ -2,8 +2,6 @@ package com.rajan.github;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,12 +15,12 @@ import android.widget.TextView;
 
 import com.rajan.github.R.id;
 import com.rajan.github.adapter.RepoAdapter;
+import com.rajan.github.database.DatabaseHelper;
 import com.rajan.github.model.RepoModel;
 import com.rajan.github.rest.APIClient;
 import com.rajan.github.rest.RepoEndPoint;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
     RecyclerView mRecyclerView;
     ArrayList<RepoModel> repoModels = new ArrayList<>();
     RecyclerView.Adapter myAdapter;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,28 +54,42 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
         myAdapter = new RepoAdapter(repoModels,
                 this);
 
+        databaseHelper = DatabaseHelper.getDB(this);
+
         mRecyclerView.setAdapter(myAdapter);
 
         loadRepositories();
     }
+
+
 
     public void loadRepositories(){
 
         RepoEndPoint apiService =
                 APIClient.getClient().create(RepoEndPoint.class);
 
-        Call<List<RepoModel>> call = apiService.getRepo(userName,repoName);
-        call.enqueue(new Callback<List<RepoModel>>() {
+        Call<RepoModel> call = apiService.getRepo(userName,repoName);
+        call.enqueue(new Callback<RepoModel>() {
             @Override
-            public void onResponse(Call<List<RepoModel>> call, Response<List<RepoModel>> response) {
+            public void onResponse(Call<RepoModel> call, Response<RepoModel> response) {
 
                 repoModels.clear();
-                repoModels.addAll(response.body());
+
+                databaseHelper.repoDao().insert(new RepoModel(
+                        response.body().getName(),
+                        response.body().getDescription(),
+                        response.body().getHtml_url()
+                        ));
+
+                for (int i = 0; i<databaseHelper.repoDao().getAllRepo().size(); i++){
+                    repoModels.add(databaseHelper.repoDao().getAllRepo().get(i));
+                }
+
                 myAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<List<RepoModel>> call, Throwable t) {
+            public void onFailure(Call<RepoModel> call, Throwable t) {
                 // Log error here since request failed
                 Log.e("Repos", t.toString());
             }
@@ -105,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements CustomDialog.Cust
     }
 
     @Override
-    public void applyText(String userNamee, String repoNamee) {
-        this.userName = userNamee;
-        this.repoName = repoNamee;
+    public void applyText(String userName, String repoName) {
+        this.userName = userName;
+        this.repoName = repoName;
     }
 }

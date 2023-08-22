@@ -9,9 +9,10 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface RepoEndPoint {
-//    @GET("/user/{user}/repos")
-//    Call<List<RepoModel>> getRepo(@Path("user") String name);
+    @GET("users/{user}/repos")
+    Call<List<RepoModel>> getRepo(@Path("user") String name);
 
     @GET("repos/{owner}/{repo}")
-    Call<List<RepoModel>> getRepo(@Path("owner") String name, @Path("repo") String repoName);
+    Call<RepoModel> getRepo(@Path("owner") String name, @Path("repo") String repoName);
+
 }
