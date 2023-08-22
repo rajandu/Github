@@ -1,27 +1,39 @@
 package com.rajan.github.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+
+@Entity(tableName = "repo")
 public class RepoModel {
 
+    @PrimaryKey
+    public int uid;
+
+
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     private String name;
 
+    @ColumnInfo(name = "description")
     @SerializedName("description")
     private String description;
 
-    @SerializedName("repoURL")
-    private String repoURL;
-
+    @ColumnInfo(name = "url")
+    @SerializedName("html_url")
+    private String html_url;
 
     public RepoModel(
-            String description,
             String name,
-            String repoURL) {
+            String description,
+            String html_url) {
 
         this.setName(name);
         this.setDescription(description);
-        this.setRepoURL(repoURL);
+        this.setHtml_url(html_url);
     }
 
     public String getName() {
@@ -31,10 +43,6 @@ public class RepoModel {
     public void setName(String name) {
         this.name = name;
     }
-
-    public void setRepoURL(String repoURL){this.repoURL = repoURL;}
-
-    public String getRepoURL(){return repoURL;}
 
     public String getDescription() {
         if(description==null){
@@ -46,6 +54,22 @@ public class RepoModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getHtml_url() {
+        return html_url;
+    }
+
+    public void setHtml_url(String html_url) {
+        this.html_url = html_url;
+    }
+
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
     }
 
 }

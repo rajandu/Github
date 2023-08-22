@@ -20,12 +20,13 @@ import java.util.ArrayList;
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
 
     private ArrayList<RepoModel> repoModels;
-   private Context context;
+    private Context context;
+    private OnClickListener onClickListener;
 
-   public RepoAdapter(ArrayList<RepoModel> repoModels, Context context){
+    public RepoAdapter(ArrayList<RepoModel> repoModels, Context context){
        this.repoModels = repoModels;
        this.context = context;
-   }
+    }
 
     public ArrayList<RepoModel> getRepoModels() {
         return repoModels;
@@ -65,7 +66,7 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.putExtra(Intent.EXTRA_TEXT, "Repository Name : "+repoModels.get(position).getName()+
                             "\n\nDiscription : "+repoModels.get(position).getDescription()+
-                            "\n\nClick here to view the repository : "+repoModels.get(position).getRepoURL());
+                            "\n\nClick here to view the repository : "+repoModels.get(position).getHtml_url());
                     intent.setType("text/plain");
                     context.startActivity(intent);
                 }
@@ -86,6 +87,21 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
             RepoTextView = itemView.findViewById(R.id.RepoTV);
             RepoDescriptionTextView = itemView.findViewById(R.id.RepoDescriptionTV);
             shareButton = itemView.findViewById(R.id.shareButton);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    
+                }
+            });
         }
+    }
+
+    public interface OnClickListener {
+        void onClick(int position, RepoModel model);
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 }
