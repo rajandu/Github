@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.rajan.github.model.RepoModel;
 
-@Database(entities = RepoModel.class, exportSchema = false, version = 1)
+@Database(entities = {RepoModel.class}, exportSchema = false, version = 1)
 public abstract class DatabaseHelper extends RoomDatabase {
 
     private static final String DB_NAME = "repoDB";

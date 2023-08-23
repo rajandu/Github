@@ -1,7 +1,11 @@
 package com.rajan.github.adapter;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +20,12 @@ import com.rajan.github.R;
 import com.rajan.github.model.RepoModel;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
 
     private ArrayList<RepoModel> repoModels;
-    private Context context;
+    private static Context context;
     private OnClickListener onClickListener;
 
     public RepoAdapter(ArrayList<RepoModel> repoModels, Context context){
@@ -40,16 +45,13 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
         return context;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
 
     @NonNull
     @Override
     public RepoAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_recycler,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_recycler2,parent,false);
         return new ViewHolder(view);
 
     }
@@ -59,6 +61,15 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
 
             holder.RepoTextView.setText(repoModels.get(position).getName());
             holder.RepoDescriptionTextView.setText(repoModels.get(position).getDescription());
+            holder.recyclerStyle.setBackgroundColor(randomColor());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData((Uri.parse(repoModels.get(position).getHtml_url())));
+                    context.startActivity(i);
+                }
+            });
 
             holder.shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,19 +92,14 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
        TextView RepoTextView, RepoDescriptionTextView;
-       ImageView shareButton;
+       ImageView shareButton, recyclerStyle;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            RepoTextView = itemView.findViewById(R.id.RepoTV);
+            RepoTextView = itemView.findViewById(R.id.repoTV);
             RepoDescriptionTextView = itemView.findViewById(R.id.RepoDescriptionTV);
             shareButton = itemView.findViewById(R.id.shareButton);
+            recyclerStyle = itemView.findViewById(R.id.recyclerStyleImageView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    
-                }
-            });
         }
     }
 
@@ -103,5 +109,11 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ViewHolder> {
 
     public void setOnClickListener(OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public int randomColor(){
+        Random random = new Random();
+        int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        return color;
     }
 }

@@ -9,19 +9,19 @@ import java.util.List;
 @Dao
 public interface RepoDao {
 
-    @Insert
-    void insert(RepoModel repoEntity);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(RepoModel repoModel);
 
     @Insert
-    void insertAll(RepoModel... repoEntity);
+    void insertAll(RepoModel... repoModels);
 
     @Insert
-    void insertList(List<RepoModel> repoEntity);
+    void insertList(List<RepoModel> repoModels);
 
     @Query("select * from repo")
     List<RepoModel> getAllRepo();
 
     @Delete
-    void delete(RepoModel repoEntity);
+    void delete(RepoModel repoModel);
 
 }

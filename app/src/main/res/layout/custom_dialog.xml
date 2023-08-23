@@ -11,9 +11,12 @@
         android:id="@+id/Repo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="REPOSITORY"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button_background"
+        android:text="ADD REPOSITORY"
         android:textSize="20dp"
+        android:textColor="@color/white"
+        android:padding="8dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Please Enter the User Name"
+        android:textColorHint="@color/myPrimaryColor"
+        android:textSize="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Repo" />
@@ -36,9 +41,40 @@
         android:layout_marginTop="16dp"
         android:hint="Please Enter the Repo Name"
         android:inputType="text"
+        android:textSize="16dp"
+        android:textColorHint="@color/myPrimaryColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userNameEditText" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_background"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ok_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repoNameEditText" />
+
+    <Button
+        android:id="@+id/ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="109dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_background"
+        android:text="Ok"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancel_button"
+        app:layout_constraintTop_toBottomOf="@+id/repoNameEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

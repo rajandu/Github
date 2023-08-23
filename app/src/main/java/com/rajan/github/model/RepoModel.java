@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "repo")
 public class RepoModel {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int uid;
 
 
@@ -46,7 +46,7 @@ public class RepoModel {
 
     public String getDescription() {
         if(description==null){
-            return "This repo has no discription";
+            return getName()+" has no discription";
         }else{
             return description;
         }
