@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose an Option"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:padding="8dp"
+            android:background="@color/myPrimaryColor"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/track_existing_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Track Existing Repo"
+            android:textColor="@color/white"
+            android:background="@color/myPrimaryColor"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:id="@+id/create_new_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Repo"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/white"
+            android:padding="8dp"
+            android:background="@color/myPrimaryColor"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

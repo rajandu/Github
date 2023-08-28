@@ -87,12 +87,44 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId() == R.id.action_add){
-            showCustomDialog(this);
+            chooseAction(this);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void showCustomDialog(Context context){
+    public void chooseAction(Context context){
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setTitle("Choose the action");
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setContentView(R.layout.dialog_action);
+
+        Button createRepository = dialog.findViewById(id.create_new_button);
+        Button trackExisting = dialog.findViewById(id.track_existing_button);
+
+        dialog.show();
+
+        createRepository.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomDialog(context,true);
+                dialog.dismiss();
+            }
+        });
+
+        trackExisting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomDialog(context,false);
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    public void showCustomDialog(Context context, boolean repoCreation){
         final Dialog dialog =new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -103,6 +135,14 @@ public class MainActivity extends AppCompatActivity {
         Button okButton = dialog.findViewById(id.ok_button);
         EditText userNameEditText = dialog.findViewById(id.userNameEditText);
         EditText repoEditText = dialog.findViewById(id.repoNameEditText);
+        TextView dialogTitle = dialog.findViewById(id.Repo);
+
+        if(repoCreation){
+            userNameEditText.setHint("Name of Repository");
+            repoEditText.setHint("Description of Repository");
+            dialogTitle.setText("Create Repository");
+
+        }
 
         dialog.show();
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +160,11 @@ public class MainActivity extends AppCompatActivity {
                 if(owner.isEmpty() || repo.isEmpty()){
                     Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 }else {
-                    loadRepositories(owner,repo, dialog);
+                    if(repoCreation){
+                        loadRepositories(owner,repo, dialog,true);
+                    }else{
+                        loadRepositories(owner,repo, dialog,false);
+                    }
                     dialog.dismiss();
                 }
             }
@@ -128,21 +172,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void loadRepositories(String repoOwner, String repoName, Dialog dialog){
+    public void loadRepositories(String repoOwner, String repoName, Dialog dialog, boolean repoCreation){
 
         RepoEndPoint apiService =
                 APIClient.getClient().create(RepoEndPoint.class);
 
-        Call<RepoModel> call = apiService.getRepo(repoOwner,repoName);
+        Call<RepoModel> call;
+        if(repoCreation){
+            // here repoOwner denotes organization repo name and repoName denotes repo descri.
+            call = apiService.createOrgRepo("GharPeShikshaa",new RepoModel(repoOwner,repoName,getOrgRepoUrl(repoOwner)));
+        }else{
+            call = apiService.getUserRepo(repoOwner,repoName);
+        }
+
         call.enqueue(new Callback<RepoModel>() {
             @Override
             public void onResponse(Call<RepoModel> call, Response<RepoModel> response) {
+                if(response.body()!=null){
+                    repoModels.add(response.body());
+                    databaseHelper.repoDao().insert(response.body());
+                    myAdapter.notifyDataSetChanged();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Please enter a valid pubic repository details", Toast.LENGTH_SHORT).show();
+                }
 
-                repoModels.add(response.body());
-
-                databaseHelper.repoDao().insert(response.body());
-
-                myAdapter.notifyDataSetChanged();
             }
             @Override
             public void onFailure(Call<RepoModel> call, Throwable t) {
@@ -152,5 +205,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    }
+    public String getOrgRepoUrl(String name){
+        return "https://github.com/gharpeshikshaa"+name;
     }
 }
